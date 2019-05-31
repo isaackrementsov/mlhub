@@ -1,17 +1,26 @@
-var ctx = document.getElementById('graph').getContext('2d');
-var sliders = document.getElementsByClassName('slider');
-var labels = document.getElementsByClassName('slider-label');
+var ctx;
+var sliders;
+var labels;
 var urlStr = window.location.href.split('/');
 var page = urlStr[urlStr.length - 1];
 var pages = ['hub'];
-var links = document.querySelectorAll('#navbar a');
+var links = document.querySelectorAll('#navbar a');;
 var colors = ['rgb(233,30,99)', 'rgb(255,152,0)', 'rgb(0,188,212)'];
 var vals = [2.3, 4.1, 5.5];
-buildChart();
 setUp();
 function setUp(){
     var idx = pages.indexOf(page);
     if(idx >= 0 && idx < links.length) links[idx].style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+    switch (idx) {
+        case 0:
+            hub();
+            break;
+    }
+}
+function hub(){
+    labels = document.getElementsByClassName('slider-label');
+    sliders = document.getElementsByClassName('slider');
+    ctx = document.getElementById('graph').getContext('2d');
     for(let i = 0; i < sliders.length; i++){
         //sliders[i].setAttribute('value', vals[i]*10);
         sliders[i].stepUp(vals[i]*10 - 50);
@@ -21,6 +30,7 @@ function setUp(){
             updateSlider(this, i);
         });
     }
+    buildChart();
 }
 function updateSlider(s, i){
     let val = s.value/100;

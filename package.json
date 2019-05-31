@@ -8,6 +8,7 @@
     "@types/express": "^4.16.1",
     "@types/express-session": "^1.15.12",
     "@types/node": "^12.0.4",
+    "@types/pg": "^7.4.14",
     "@types/redis": "^2.8.13",
     "body-parser": "^1.19.0",
     "connect-redis": "2.0.0",
@@ -15,12 +16,29 @@
     "express": "^4.17.1",
     "express-session": "^1.16.1",
     "path": "^0.12.7",
-    "redis": "^2.8.0"
+    "pg": "^7.11.0",
+    "redis": "^2.8.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.17"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Isaac Krementsov",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isaackrementsov/mlhub.git"
+  },
+  "keywords": [
+    "machine",
+    "learning",
+    "web",
+    "server"
+  ],
+  "bugs": {
+    "url": "https://github.com/isaackrementsov/mlhub/issues"
+  },
+  "homepage": "https://github.com/isaackrementsov/mlhub#readme"
 }

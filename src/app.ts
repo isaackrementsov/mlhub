@@ -1,3 +1,7 @@
+/*TODO:
+Add web security and validation
+*/
+
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as path from 'path';
@@ -8,13 +12,14 @@ import ejs from 'ejs';
 
 import randomGen from './util/randomGen';
 
+import * as middleware from './util/middleware';
+
 const RedisStore = require('connect-redis')(session);
 
 const client = redis.createClient();
 const app = express();
 
 const SESSION_SECRET = randomGen();
-console.log(SESSION_SECRET);
 
 app.set('port', process.env.PORT || 8080);
 app.set('views', path.join(__dirname, '../views'));
@@ -31,6 +36,7 @@ app.use(session({
         port: 6379,
     })
 }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
+app.use(middleware.auth);
 
 export default app;
