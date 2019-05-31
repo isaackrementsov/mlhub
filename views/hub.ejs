@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link type="text/css" rel="stylesheet" href="css/main.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/data.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MlHub</title>
+    </head>
+    <body>
+    <div class="sidebar">
+        <ul id="navbar" class="navbar">
+                <li><img src="img/logo.svg"></li>
+                <li><a href="/learning">Learning</a></li>
+                <li><a href="/performance">Performance</a></li>
+                <li><a href="/network">Network</a></li>
+                <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+    <div class="content" style="width: 85%; display: inline-block; left: 15%">
+        <div class="header">
+            <h1 class="dashboard-header">Machine learning monitoring</h1>
+            <h2 class="dashboard-subheading">2 computers connected</h2>
+        </div>
+        <div class="panels">
+            <div class="panel" id="graph-container">
+                <h3>Convergence</h3>
+                <canvas id="graph" height="215%"></canvas>
+            </div>
+            <div class="panels-row">
+                <div class="panel" id="sliders-container">
+                    <h3>Learning Rates</h3>
+                    <form class="sliders">
+                        <label class="slider-label"></label>
+                        <input type="range" class="slider">
+                        <label class="slider-label"></label>
+                        <input type="range" class="slider">
+                        <label class="slider-label"></label>
+                        <input type="range" class="slider">
+                    </form>
+                </div>
+                <div class="panel" id="relative-minima">
+                    <h3>Relative Minima Found</h3>
+                    <ul class="side-scroll">
+                        <li class="h3">1.3MSE</li>
+                        <li class="p">1.5MSE</li>
+                        <li class="p">2.1MSE</li>
+                        <li class="p">2.5MSE</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    <script type="text/javascript" src="js/scripts.js"></script>
+</html>

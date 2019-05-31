@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap');
+@import 'range.css';
+@import 'scroll.css';
+@import 'forms.css';
+body {
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: whitesmoke;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.blue {
+    background: linear-gradient(#448AFF, #2962FF);
+    color: white;
+}
+.content {
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: relative;
+    overflow-x: hidden;
+}
+.half {
+    position: fixed;
+    z-index: -1;
+    width: 100%;
+    height: 50%;
+}
+.sidebar {
+    position: fixed;
+    display: inline-block;
+    height: 100%;
+    width: 15%;
+    background: linear-gradient(#448AFF, #2962FF);
+    box-shadow: 0 0px 8px 0 rgba(0,0,0,0.1);
+}
+.panels {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 20px;
+    align-items: flex-start;
+}
+.panel{
+    display: block;
+    position: relative;
+    background-color: white;
+    padding: 30px 35px;
+    margin: 20px;
+    border-style: hidden;
+    border-radius: 7px;
+    box-shadow: 0 0px 8px 0 rgba(0,0,0,0.1);
+}
+.panel h3{
+    margin: 0;
+    color: rgb(90,90,90);
+    font-size: 16px;
+}
+.dashboard-subheading {
+    color: #2962FF;
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+.dashboard-header {
+    color: rgb(90,90,90);
+    font-weight: normal;
+    margin: 0;
+    font-size: 27px;
+}
+.header {
+    padding: 20px;
+    width: 100%;
+    position: relative;
+    top: 0;
+    background-color: white;
+    box-shadow: 0 0px 8px 0 rgba(0,0,0,0.1);
+}
+.side-scroll {
+    list-style-type: none;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 19px 0;
+    margin: 0;
+    width: 100%;
+}
+.side-scroll * {
+    display: inline;
+    margin: 10px;
+    vertical-align: middle;
+}
+.side-scroll .h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2196F3;
+}
+.side-scroll .p {
+    color: rgb(120,120,120);
+    font-size: 16px;
+}
+.navbar {
+    width: 100%;
+    text-align: center;
+    list-style-type: none;
+    padding: 0;
+    padding-top: -10%;
+}
+.navbar img {
+    width: 60%;
+    padding: 25% 0;
+}
+.navbar a {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 9% 0;
+    color: whitesmoke;
+    text-decoration: none;
+    transition: 0.1s ease-in-out;
+}
+.navbar a:hover, .navbar a.active {
+    background-color: rgba(255,255,255, 0.1);
+}
+.navbar a:visited {
+    color: whitesmoke;
+}
+#main {
+    position: absolute;
+    top: -15vh;
+    color: white;
+    width: 95%;
+    font-size: 40px;
+}
+#graph {
+    display: block;
+}
+#graph-container {
+    width: 600px;
+    max-width: 65vw;
+}
+#relative-minima {
+    width: 250px;
+    height: 85px;
+}
+#sliders-container {
+    width: 250px;
+    height: 250px;
+}
