@@ -2,6 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
 
 import Weight from './Weight';
 import DataPoint from './DataPoint';
+import randomGen from '../util/randomGen';
 
 @Entity()
 export default class Computer {
@@ -13,6 +14,8 @@ export default class Computer {
     learningRate : number;
     @Column()
     name : string;
+    @Column()
+    authKey : string;
 
     @OneToMany(type => Weight, weight => weight.computer)
     weights : Weight[];
@@ -24,6 +27,7 @@ export default class Computer {
     constructor(model : string, computerLearningRate : number){
         this.name = model;
         this.learningRate = computerLearningRate;
+        this.authKey = randomGen();
     }
 
 }

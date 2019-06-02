@@ -1,4 +1,4 @@
-import {createConnection} from 'typeorm';
+import { createConnection } from 'typeorm';
 
 import app from './app';
 import routes from './server/routes';

@@ -1,15 +1,20 @@
 /*TODO:
 Add middleware for login, check login if /hub
+Add security for promise rejection with try/catch
+Add multi-user support maybe
+Add desktop-server validation
 */
 
-import * as hubController from '../controllers/hubController';
-import * as landingController from '../controllers/landingController';
+import ComputerController from '../controllers/ComputerController';
+import UserController from '../controllers/UserController';
 
 let routes = (app) => {
-    app.get('/', landingController.getHome);
-    app.get('/hub', hubController.getDashboard);
+    let computerController : ComputerController = new ComputerController();
+    let userController : UserController = new UserController();
+    app.get('/', userController.getLogin);
+    app.get('/hub', computerController.getData);
 
-    app.post('/', landingController.login);
-    app.post('/logout', landingController.logout);
+    app.post('/', userController.login);
+    app.post('/logout', userController.logout);
 }
 export default routes;

@@ -12,12 +12,13 @@ import ejs from 'ejs';
 
 import randomGen from './util/randomGen';
 
-import * as middleware from './util/middleware';
+import Middleware from './util/middleware';
 
 const RedisStore = require('connect-redis')(session);
 
 const client = redis.createClient();
 const app = express();
+const middleware = new Middleware();
 
 const SESSION_SECRET = randomGen();
 
