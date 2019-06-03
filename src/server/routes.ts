@@ -12,7 +12,7 @@ let routes = (app) => {
     let computerController : ComputerController = new ComputerController();
     let userController : UserController = new UserController();
     app.get('/', userController.getLogin);
-    app.get('/logout', userController.postLogout);
+    app.get('/hub/logout', userController.getLogout);
     app.get('/hub', computerController.getData);
 
     app.post('/', userController.postLogin);

@@ -7,6 +7,12 @@ export default class UserController {
 
     passkey : string;
 
+    getLogout = (req: Request, res : Response) => {
+        req.session.destroy(() => {
+            res.redirect('/');
+        });
+    }
+
     getLogin = (req : Request, res : Response) => {
         res.render('home');
     }
@@ -18,11 +24,6 @@ export default class UserController {
         }else{
             res.redirect('/');
         }
-    }
-
-    postLogout = (req: Request, res : Response) => {
-        req.session.loggedIn = false;
-        res.redirect('/');
     }
 
     constructor(){
