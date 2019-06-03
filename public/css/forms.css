@@ -60,3 +60,19 @@ form.sliders {
     max-height: 80%;
     overflow: auto;
 }
+.slider-update {
+    color: rgb(90,90,90);
+    font-weight: bold;
+    padding: 9px 15px;
+    border-style: hidden;
+    border-radius: 3px;
+    transition: 0.2s ease-in-out;
+}
+.slider-update:hover {
+    background-color: #2196F3;
+    color: white;
+    box-shadow: 0 0px 8px 0 rgba(0,0,0,0.2);
+}
+button:focus {
+    outline: none;
+}

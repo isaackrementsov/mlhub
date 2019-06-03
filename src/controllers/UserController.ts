@@ -7,22 +7,23 @@ export default class UserController {
 
     passkey : string;
 
-    getLogin = (req : Request, res : Response) => {
-        res.render("home");
+    getLogout = (req: Request, res : Response) => {
+        req.session.destroy(() => {
+            res.redirect('/');
+        });
     }
 
-    login = (req : Request, res : Response) => {
+    getLogin = (req : Request, res : Response) => {
+        res.render('home');
+    }
+
+    postLogin = (req : Request, res : Response) => {
         if(req.body.key == this.passkey){
             req.session.loggedIn = true;
             res.redirect('/hub');
         }else{
             res.redirect('/');
         }
-    }
-
-    logout = (req: Request, res : Response) => {
-        req.session.loggedIn = false;
-        res.redirect('/');
     }
 
     constructor(){

@@ -10,12 +10,14 @@ export default class Computer {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @Column()
+    @Column({type: "float"})
     learningRate : number;
     @Column()
     name : string;
     @Column()
     authKey : string;
+    @Column()
+    connected : boolean;
 
     @OneToMany(type => Weight, weight => weight.computer)
     weights : Weight[];
@@ -28,6 +30,7 @@ export default class Computer {
         this.name = model;
         this.learningRate = computerLearningRate;
         this.authKey = randomGen();
+        this.connected = false;
     }
 
 }

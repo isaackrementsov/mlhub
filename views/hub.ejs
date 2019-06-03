@@ -1,4 +1,23 @@
 <% include partials/header %>
+    <script type="text/javascript">
+        function submitForm(){
+            document.forms['sliders'].submit();
+        }
+    </script>
+    <% computers.map(c => { %>
+        <% if(c.connected){ %>
+            <% c.data.sort((a, b) => a.time.valueOf() - b.time.valueOf()) %>
+            <% var sess = c.data[0].session %>
+            <% c.data.map(d => { %>
+                <% if(d.session == sess){ %>
+                    <div id="<%= c.name %>|<%= Math.round(c.learningRate*100)/100 %>" class="data-point" style="display: none">
+                        <%= Math.round(100*(d.time.valueOf() - new Date().valueOf())/60000)/100 %>|
+                        <%= d.value %>
+                    </div>
+                <% } %>
+            <% }); %>
+        <% } %>
+    <% }); %>
     <div class="content" style="width: 85%; display: inline-block; left: 15%">
         <div class="header">
             <h1 class="dashboard-header">Machine learning monitoring</h1>
@@ -12,14 +31,15 @@
             <div class="panels-row">
                 <div class="panel" id="sliders-container">
                     <h3>Learning Rates</h3>
-                    <form class="sliders">
-                        <label class="slider-label"></label>
-                        <input type="range" class="slider">
-                        <label class="slider-label"></label>
-                        <input type="range" class="slider">
-                        <label class="slider-label"></label>
-                        <input type="range" class="slider">
+                    <form class="sliders" action="/hub/computers/update" method="POST" name="sliders">
+                        <div class="sliders-scroll">
+                            <% for(let i = 0; i < computers.length; i++){ %>
+                                <label class="slider-label"><%= computers[i].learningRate %></label>
+                                <input type="range" class="slider" name="comp|<%= computers[i].id %>">
+                            <% } %>
+                        </div>
                     </form>
+                    <button class="slider-update" onclick="submitForm()">Update</button>
                 </div>
                 <div class="panel" id="relative-minima">
                     <h3>Relative Minima Found</h3>
@@ -32,5 +52,24 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
+    <script type="text/javascript">
+        var dataPoints = document.getElementsByClassName('data-point');
+        var computers = [];
+        for(let i = 0; i < dataPoints.length; i++){
+            var dp = dataPoints[i];
+            var cInfo = dp.id.split('|');
+            var parts = dp.innerHTML.split('|');
+            var data = {x: parseFloat(parts[0]), y: parseFloat(parts[1])};
+            var filtered = computers.filter(c => c.name == cInfo[0]);
+            if(filtered.length == 0){
+                computers.push({name: cInfo[0], lr: parseFloat(cInfo[1]), data: [data]});
+            }else{
+                filtered[0].data.push(data);
+            }
+        }
+        for(let i = 0; i < computers.length; i++){
+            computers[i].data.sort((a, b) => a.x - b.x);
+        }
+    </script>
 <% include partials/footer %>
