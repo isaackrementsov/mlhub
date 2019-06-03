@@ -12,9 +12,10 @@ let routes = (app) => {
     let computerController : ComputerController = new ComputerController();
     let userController : UserController = new UserController();
     app.get('/', userController.getLogin);
+    app.get('/logout', userController.postLogout);
     app.get('/hub', computerController.getData);
 
-    app.post('/', userController.login);
-    app.post('/logout', userController.logout);
+    app.post('/', userController.postLogin);
+    app.post('/hub/computers/update', computerController.patch);
 }
 export default routes;

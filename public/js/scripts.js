@@ -4,7 +4,7 @@ var labels;
 var urlStr = window.location.href.split('/');
 var page = urlStr[urlStr.length - 1];
 var pages = ['hub'];
-var links = document.querySelectorAll('#navbar a');;
+var links = document.querySelectorAll('#navbar a');
 var colors = ['rgb(233,30,99)', 'rgb(255,152,0)', 'rgb(0,188,212)'];
 var vals = [2.3, 4.1, 5.5];
 setUp();
@@ -22,8 +22,7 @@ function hub(){
     sliders = document.getElementsByClassName('slider');
     ctx = document.getElementById('graph').getContext('2d');
     for(let i = 0; i < sliders.length; i++){
-        //sliders[i].setAttribute('value', vals[i]*10);
-        sliders[i].stepUp(vals[i]*10 - 50);
+        sliders[i].stepUp(computers[i].lr*10 - 50);
         let slider = sliders[i];
         updateSlider(slider, i);
         slider.addEventListener('change', function(){
@@ -48,11 +47,6 @@ function chooseColor(i){
     }
 }
 function buildChart(){
-    var computers = [
-        {name: 'Dell G3', data: data[0]},
-        {name: 'Macbook Pro', data: data[1]},
-        {name: 'HP Pavilion 360', data: data[2]}
-    ];
     var datasets = [];
     for(let i = 0; i < computers.length; i++){
         let computer = computers[i];

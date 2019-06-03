@@ -8,10 +8,10 @@ export default class UserController {
     passkey : string;
 
     getLogin = (req : Request, res : Response) => {
-        res.render("home");
+        res.render('home');
     }
 
-    login = (req : Request, res : Response) => {
+    postLogin = (req : Request, res : Response) => {
         if(req.body.key == this.passkey){
             req.session.loggedIn = true;
             res.redirect('/hub');
@@ -20,7 +20,7 @@ export default class UserController {
         }
     }
 
-    logout = (req: Request, res : Response) => {
+    postLogout = (req: Request, res : Response) => {
         req.session.loggedIn = false;
         res.redirect('/');
     }
