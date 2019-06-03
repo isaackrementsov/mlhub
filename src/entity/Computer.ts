@@ -2,6 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
 
 import Weight from './Weight';
 import DataPoint from './DataPoint';
+import RelativeMinimum from './RelativeMinimum';
 import randomGen from '../util/randomGen';
 
 @Entity()
@@ -25,6 +26,8 @@ export default class Computer {
     biases : Weight[]
     @OneToMany(type => DataPoint, dataPoint => dataPoint.computer)
     data : DataPoint[];
+    @OneToMany(type => RelativeMinimum, relativeMinimum => relativeMinimum.computer)
+    relativeMinima : RelativeMinimum[];
 
     constructor(model : string, computerLearningRate : number){
         this.name = model;

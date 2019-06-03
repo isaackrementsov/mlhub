@@ -1,11 +1,11 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
 
-import Computer from './Computer.ts';
+import Computer from './Computer';
 
 
 
 @Entity()
-export class RelativeMinimum {
+export default class RelativeMinimum {
 
 	@PrimaryGeneratedColumn()
 	id: number;
@@ -17,13 +17,13 @@ export class RelativeMinimum {
 	@Column()
 	date: Date;
 
-	@ManyToOne(type => Computer, computer.relativeMinima)
+	@ManyToOne(type => Computer)
 	computer : Computer;
 
 	constructor(computerThatFound : Computer, slopeAtPoint : number, dateCurrent : Date, mseValue : number) {
 		this.computer = computerThatFound;
 		this.slope = slopeAtPoint;
 		this.date = dateCurrent;
-		this.value = mseValues;
+		this.value = mseValue;
 	}
 }
