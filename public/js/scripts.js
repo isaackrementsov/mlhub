@@ -76,7 +76,23 @@ function buildChart(){
             datasets: datasets
         },
         options: {
-            responsive: true
+            responsive: true,
+            scales: {
+              xAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Minutes Ago'
+                }
+              }],
+              yAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: '-∇C'
+                }
+              }]
+            }
         }
     });
 }
