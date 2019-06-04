@@ -2,8 +2,10 @@ import { createConnection, Connection } from 'typeorm';
 
 import Computer from '../entity/Computer';
 import DataPoint from '../entity/DataPoint';
+import RelativeMinimum from '../entity/RelativeMinimum';
 
-const data = [
+const minima : number[] = [1.3, 1.4, 1.7, 2.1, 3.5];
+const data : {x: number, y: number}[][] = [
     [
         {x: -3, y: 3},
         {x: -2.8, y: 2.7},
@@ -49,6 +51,7 @@ const data = [
 ];
 
 createConnection().then(async connection => {
+    await connection.synchronize();
     let computers : Computer[] = [
         new Computer('Dell G3', 2.3),
         new Computer('Macbook Pro', 5.6),
@@ -60,7 +63,9 @@ createConnection().then(async connection => {
         await connection.manager.save(computer);
         generateDataSet(computer, connection, data[i]);
     }
-
+    for(let minimum of minima){
+        await connection.manager.save(new RelativeMinimum(computers[0], 0.1, new Date(), minimum));
+    }
 });
 function generateDataSet(computer : Computer, connection : Connection, data : {x: number, y: number}[]){
     let MS_PER_MINUTE = 60000;
