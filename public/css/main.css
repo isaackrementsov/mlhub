@@ -146,6 +146,11 @@ h1 {
     width: 250px;
     height: 85px;
 }
+#relative-minima p {
+    color: grey;
+    font-weight: 300;
+    margin-left: 0;
+}
 #sliders-container {
     width: 250px;
     height: 250px;

@@ -1,14 +1,21 @@
+/*TODO:
+Don't select all minima
+*/
 import { Response, Request } from 'express';
 import { Repository, getRepository } from 'typeorm';
+
+import RelativeMinimum from '../entity/RelativeMinimum';
 import Computer from '../entity/Computer';
 
 export default class ComputerController {
 
     repo : Repository<Computer>;
+    minRepo : Repository<RelativeMinimum>;
 
     getData = async (req : Request, res : Response) => {
         let computers : Computer[] = await this.repo.find({'relations': ['data']});
-        res.render("hub", {session: req.session, computers: computers});
+        let relativeMinima : RelativeMinimum[] = await this.minRepo.find();
+        res.render("hub", {session: req.session, computers: computers, minima: relativeMinima.sort((a, b) => a.value - b.value)});
     }
 
     patch = async (req : Request, res : Response) => {
@@ -27,6 +34,7 @@ export default class ComputerController {
 
     constructor(){
         this.repo = getRepository(Computer);
+        this.minRepo = getRepository(RelativeMinimum);
     }
 
 }

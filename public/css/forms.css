@@ -62,11 +62,13 @@ form.sliders {
 }
 .slider-update {
     color: rgb(90,90,90);
+    background-color: rgb(235, 235, 235);
     font-weight: bold;
     padding: 9px 15px;
     border-style: hidden;
     border-radius: 3px;
     transition: 0.2s ease-in-out;
+    cursor: pointer;
 }
 .slider-update:hover {
     background-color: #2196F3;

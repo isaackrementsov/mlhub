@@ -51,12 +51,16 @@ function buildChart(){
     for(let i = 0; i < computers.length; i++){
         let computer = computers[i];
         let line = colors[i];
-        let fill = `rgba(${line.split('(')[1].split(')')[0]},0.4)`;
+        let fill = `rgba(${line.split('(')[1].split(')')[0]},0.6)`;
+        let gradient = ctx.createLinearGradient(800,0,0,0);
+        gradient.addColorStop(0, fill);
+        gradient.addColorStop(1, `rgba(${line.split('(')[1].split(')')[0]},0.1)`);
+        console.log(fill);
         datasets.push({
             label: computer.name,
             showLine: true,
             lineTension: 0.5,
-            backgroundColor: fill,
+            backgroundColor: gradient,
             borderColor: line,
             pointBorderColor: line,
             pointBackgroundColor: '#fff',
