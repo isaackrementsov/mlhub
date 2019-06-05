@@ -1,0 +1,61 @@
+<% include partials/header %>
+<script type="text/javascript">
+    function submitForm(){
+        document.forms['sliders'].submit();
+    }
+</script>
+<% computers.map(c => { %>
+    <% if(c.connected){ %>
+        <% c.data.sort((a, b) => a.time.valueOf() - b.time.valueOf()) %>
+        <% var sess = c.data[0].session %>
+        <% c.data.map(d => { %>
+            <% if(d.session == sess){ %>
+                <div value="<%= c.name %>|<%= Math.round(c.learningRate*100)/100 %>" class="data-point" style="display: none">
+                    <%= Math.round(100*(d.time.valueOf() - new Date().valueOf())/60000)/100 %>|
+                    <%= d.value %>
+                </div>
+            <% } %>
+        <% }); %>
+    <% } %>
+<% }); %>
+<div class="content" style="width: 85%; display: inline-block; left: 15%">
+    <div class="header">
+        <h1 class="dashboard-header">Performance</h1>
+        <h2 class="dashboard-subheading">2 computers connected</h2>
+    </div>
+    <div class="panels">
+        <div class="panel" id="graph-container">
+            <h3>Computers</h3>
+            <canvas id="graph" height="215%"></canvas>
+        </div>
+        </div>
+        <div class="panel" id="doughnut-minima">
+            <h3>Minima Found</h3>
+            <canvas id="minimaDonut"></canvas> 
+        </div>
+        <div class="panel" id="stop-learn">
+            <button class="button" onclick="stop()">STOP LEARNING</button>
+        </div>
+
+    </div>
+
+<script type="text/javascript">
+    var dataPoints = document.getElementsByClassName('data-point');
+    var computers = [];
+    for(let i = 0; i < dataPoints.length; i++){
+        var dp = dataPoints[i];
+        var cInfo = dp.getAttribute('value').split('|');
+        var parts = dp.innerHTML.split('|');
+        var data = {x: parseFloat(parts[0]), y: parseFloat(parts[1])};
+        var filtered = computers.filter(c => c.name == cInfo[0]);
+        if(filtered.length == 0){
+            computers.push({name: cInfo[0], lr: parseFloat(cInfo[1]), data: [data]});
+        }else{
+            filtered[0].data.push(data);
+        }
+    }
+    for(let i = 0; i < computers.length; i++){
+        computers[i].data.sort((a, b) => a.x - b.x);
+    }
+</script>
+<% include partials/footer %>

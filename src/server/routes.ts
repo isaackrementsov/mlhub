@@ -17,7 +17,7 @@ let routes = (app) => {
     app.get('/', userController.getLogin);
     app.get('/hub/logout', userController.getLogout);
     app.get('/hub', computerController.getData);
-
+    app.get('/hub/performance', computerController.getPerformance)
     app.post('/', userController.postLogin);
     app.post('/hub/computers/update', computerController.patch);
     app.post('/api/login', apiController.postLogin);

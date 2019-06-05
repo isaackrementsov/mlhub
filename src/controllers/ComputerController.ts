@@ -32,6 +32,13 @@ export default class ComputerController {
         res.redirect('/hub');
     }
 
+    getPerformance = async (req : Request, res : Response) => {
+        let computers : Computer[] = await this.repo.find({'relations' : ['data']});
+        let relativeMinima : RelativeMinimum[] = await this.minRepo.find();
+        res.render("performance", {session: req.session, computers: computers, minima: relativeMinima.sort((a, b) => a.value - b.value)});
+        
+    }
+
     constructor(){
         this.repo = getRepository(Computer);
         this.minRepo = getRepository(RelativeMinimum);
