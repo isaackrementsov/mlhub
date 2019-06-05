@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, Index} from 'typeorm';
 
 import Weight from './Weight';
 import DataPoint from './DataPoint';
@@ -14,11 +14,13 @@ export default class Computer {
     @Column({type: "float"})
     learningRate : number;
     @Column()
-    name : string;
-    @Column()
     authKey : string;
     @Column()
     connected : boolean;
+
+    @Index({unique: true})
+    @Column()
+    name : string;
 
     @OneToMany(type => Weight, weight => weight.computer)
     weights : Weight[];
