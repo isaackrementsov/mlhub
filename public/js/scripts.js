@@ -58,6 +58,8 @@ function donut() {
     ctx = document.getElementById('minimaDonut').getContext('2d');
     buildMinimaDonut();
 }
+
+
 function updateSlider(s, i){
     let val = s.value/100;
     labels[i].innerHTML = Math.round(val*1000)/100;
@@ -129,8 +131,8 @@ function buildChart(){
 
 function buildPerfChart() {
     var datasets = [];
-    for(let i = 0; i < computers.length; i++){
-        let computer = computers[i];
+    for(let i = 0; i < computersPerf.length; i++){
+        let computerPerf = computersPerf[i];
         let line = colors[chooseColor(i)];
         let fill = `rgba(${line.split('(')[1].split(')')[0]},0.6)`;
         let gradient = ctx.createLinearGradient(800,0,0,0);
@@ -151,7 +153,7 @@ function buildPerfChart() {
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: computer.data
+            data: computerPerf.data
         });
     }
     var stackedLine = new Chart(ctx, {
@@ -250,6 +252,3 @@ function buildMinimaDonut() {
     });
 }
 
-function stop() {
-    alert("No");
-}
