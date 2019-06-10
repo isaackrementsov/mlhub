@@ -1,5 +1,4 @@
 /*TODO:
-Add middleware for login, check login if /hub
 Add security for promise rejection with try/catch
 Add multi-user support maybe
 Add desktop-server validation
@@ -17,7 +16,11 @@ let routes = (app) => {
     app.get('/', userController.getLogin);
     app.get('/hub/logout', userController.getLogout);
     app.get('/hub', computerController.getData);
-    app.get('/hub/performance', computerController.getPerformance)
+    app.get('/hub/performance', computerController.getPerformance);
+    app.get('/api/ml/inputs', apiController.getInputs);
+    app.get('/api/ml/outputs', apiController.getOutputs);
+    app.get('/api/ml/misc', apiController.getMisc);
+
     app.post('/', userController.postLogin);
     app.post('/hub/computers/update', computerController.patch);
     app.post('/api/login', apiController.postLogin);

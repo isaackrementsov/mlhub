@@ -15,13 +15,9 @@ export default class Weight {
     @Column()
     layer : number;
 
-    @ManyToOne(type => Computer)
-    computer : Computer;
-
-    constructor(startingIndex : number, layer : number, hostComputer : Computer, endingIndex ? : number){
+    constructor(startingIndex : number, layer : number, endingIndex ? : number){
         this.idx = startingIndex;
         this.layer = layer;
-        this.computer = hostComputer;
         this.to = endingIndex ? endingIndex : -1;
     }
 

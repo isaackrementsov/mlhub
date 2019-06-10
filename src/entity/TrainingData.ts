@@ -8,15 +8,11 @@ export default class TrainingData {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @Column()
-    path : string;
-
+    @OneToMany(type => Activation, activation => activation.trainingData)
+    inputActivations : Activation[];
     @OneToMany(type => Activation, activation => activation.trainingData)
     outputActivations : Activation[];
 
-    constructor(targetActivations : Activation[], filePath : string){
-        this.outputActivations = targetActivations;
-        this.path = filePath;
-    }
+    constructor(){}
 
 }

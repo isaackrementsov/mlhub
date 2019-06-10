@@ -22,10 +22,6 @@ export default class Computer {
     @Column()
     name : string;
 
-    @OneToMany(type => Weight, weight => weight.computer)
-    weights : Weight[];
-    @OneToMany(type => Weight, weight => weight.computer)
-    biases : Weight[]
     @OneToMany(type => DataPoint, dataPoint => dataPoint.computer)
     data : DataPoint[];
     @OneToMany(type => RelativeMinimum, relativeMinimum => relativeMinimum.computer)
