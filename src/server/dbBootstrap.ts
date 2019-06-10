@@ -3,6 +3,9 @@ import { createConnection, Connection } from 'typeorm';
 import Computer from '../entity/Computer';
 import DataPoint from '../entity/DataPoint';
 import RelativeMinimum from '../entity/RelativeMinimum';
+import TrainingData from '../entity/TrainingData';
+import Activation from '../entity/Activation';
+import Config from '../entity/Config';
 
 const minima : number[] = [1.3, 1.4, 1.7, 2.1, 3.5];
 const data : {x: number, y: number}[][] = [
@@ -52,20 +55,41 @@ const data : {x: number, y: number}[][] = [
 
 createConnection().then(async connection => {
     await connection.synchronize();
+
     let computers : Computer[] = [
         new Computer('Dell G3', 2.3),
         new Computer('Macbook Pro', 5.6),
         new Computer('HP Pavilion', 4.6)
     ];
+
     for(let i = 0; i < computers.length; i++){
         let computer = computers[i];
         computer.connected = true;
         await connection.manager.save(computer);
         generateDataSet(computer, connection, data[i]);
     }
+
+    for(let i = 0; i < 3; i++){
+        let td : TrainingData = new TrainingData();
+        let o : Activation[] = [];
+        let i : Activation[] = [];
+
+        for(let k = 0; k < 3; k++){
+            o.push(new Activation(k, td, Math.random(), ''));
+            i.push(new Activation(k, td, Math.random(), 'stuff'));
+        }
+
+        td.outputActivations = o;
+        td.inputActivations = i;
+
+        await connection.manager.save(td);
+    }
+
     for(let minimum of minima){
         await connection.manager.save(new RelativeMinimum(computers[0], 0.1, new Date(), minimum));
     }
+
+    await connection.manager.save(new Config([3,2,3]));
 });
 function generateDataSet(computer : Computer, connection : Connection, data : {x: number, y: number}[]){
     let MS_PER_MINUTE = 60000;

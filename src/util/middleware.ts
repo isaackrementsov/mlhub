@@ -1,7 +1,12 @@
 import { Response, Request, NextFunction } from "express";
+import { Repository, getRepository } from 'typeorm';
+
+import Computer from '../entity/Computer';
 
 export default class Middleware {
-    
+
+    computerRepo : Repository<Computer>;
+
     auth(req : Request, res : Response, next : NextFunction){
         let urlParts : string[] = req.url.split('/');
         let code: number = 0;
@@ -11,6 +16,8 @@ export default class Middleware {
             }else if(urlParts[1] != 'hub' && req.session.loggedIn){
                 code = 2;
             }
+            let val : number = this.apiCheck(urlParts, req.query.authKey);
+            if(val != -1) code = val;
         }else{
             code = 1;
         }
@@ -24,7 +31,20 @@ export default class Middleware {
             case 2:
                 res.redirect('/hub');
                 break;
+            case 3:
+                res.send({auth: false});
         }
+    }
+
+    apiCheck(parts : string[], authKey : string) : number {
+        if(parts[1] == 'api' && !(parts[2] == 'login' || parts[3] == 'register')){
+            if(this.computerRepo.find({select: ['authKey'], where: {'authKey': authKey}}))  return 3;
+            else return 1;
+        }
+    }
+
+    constructor(){
+        this.computerRepo = getRepository(Computer);
     }
 
 }
