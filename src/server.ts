@@ -4,9 +4,10 @@ import app from './app';
 import routes from './server/routes';
 import Middleware from './util/Middleware';
 
+
 createConnection().then(async connection => {
     if(app.get('env') == 'development'){
-        await connection.synchronize();
+        await connection.synchronize();  
     }
 
     let middleware : Middleware = new Middleware();
