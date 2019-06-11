@@ -10,7 +10,7 @@ export default class Activation {
 
     @Column()
     idx : number;
-    @Column()
+    @Column({type: 'float'})
     val : number;
     @Column()
     def : string

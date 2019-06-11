@@ -17,7 +17,7 @@ export default class ApiController {
     //Except for the last two, all methods in ApiController are middleware checked, so authKey must be valid
 
     getInputs = async (req : Request, res : Response) => {
-        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['inputActivations']});
+        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['inputActivations'], where: {'def': ''}});
 
         let inputs : number[][] = data.map(d => {
             return d.inputActivations.map(i => {
@@ -29,7 +29,7 @@ export default class ApiController {
     }
 
     getOutputs = async (req : Request, res : Response) => {
-        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['outputActivations']});
+        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['outputActivations'], where: {'def': Not('')}});
 
         let outputs = data.map(d => {
             return d.outputActivations.map(o => {

@@ -75,8 +75,11 @@ createConnection().then(async connection => {
         let i : Activation[] = [];
 
         for(let k = 0; k < 3; k++){
-            o.push(new Activation(k, td, Math.random(), ''));
-            i.push(new Activation(k, td, Math.random(), 'stuff'));
+            let ok : Activation = new Activation(k, td, Math.random(), '');
+            let ik : Activation = new Activation(k, td, Math.random(), 'stuff');
+
+            o.push(ok);
+            i.push(ik);
         }
 
         td.outputActivations = o;
