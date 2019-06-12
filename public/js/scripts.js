@@ -63,13 +63,13 @@ function updateSlider(s, i){
     let val = s.value/100;
     labels[i].innerHTML = Math.round(val*1000)/100;
     sliders[i].style.backgroundImage = `-webkit-gradient(linear, left top, right top,
-            color-stop(${val}, ${colors[i]}),
+            color-stop(${val}, ${colors[chooseColor(i)]}),
             color-stop(${val + 0.01}, #C5C5C5)
     )`;
 }
 function chooseColor(i){
     if(i < 0 || i >= colors.length){
-        return i - colors.length;
+        return i % (colors.length - 1);
     }else{
         return i;
     }
@@ -78,7 +78,7 @@ function buildChart(){
     var datasets = [];
     for(let i = 0; i < computers.length; i++){
         let computer = computers[i];
-        let line = colors[i];
+        let line = colors[chooseColor(i)];
         let fill = `rgba(${line.split('(')[1].split(')')[0]},0.6)`;
         let gradient = ctx.createLinearGradient(800,0,0,0);
         gradient.addColorStop(0, fill);
@@ -101,6 +101,28 @@ function buildChart(){
             data: computer.data
         });
     }
+
+    let ws = new WebSocket('ws://localhost/api/ws/relativeMinimum');
+    ws.onopen = () => { }
+
+    ws.onmessage = data => {
+        let obj = JSON.parse(data.data);
+        for(let i = 0; i < stackedLine.data.datasets.length; i++){
+            let set = stackedLine.data.datasets[i];
+            if(set.label == obj.computer.name){
+                for(let k = 0; k < set.data.length; k++){
+                    stackedLine.data.datasets[i].data[k].x = Math.round(1000*(new Date(set.data[k].old).valueOf() - new Date().valueOf())/1000)/1000;
+                }
+                stackedLine.data.datasets[i].data.push({
+                    x: Math.round(1000*(new Date(obj.date).valueOf() - new Date().valueOf())/1000)/1000,
+                    y: obj.value,
+                    old: obj.value
+                });
+            }
+        }
+        stackedLine.update();
+    }
+
     var stackedLine = new Chart(ctx, {
         type: 'scatter',
         data: {
@@ -113,14 +135,14 @@ function buildChart(){
                 display: true,
                 scaleLabel: {
                   display: true,
-                  labelString: 'Minutes Ago'
+                  labelString: 'Time Ago'
                 }
               }],
               yAxes: [{
                 display: true,
                 scaleLabel: {
                   display: true,
-                  labelString: '-∇C'
+                  labelString: 'Cost'
                 }
               }]
             }
@@ -130,7 +152,7 @@ function buildChart(){
 
 function buildPerfChart() {
 
-    webSockReceive();
+    //let ws = new WebSocket('ws://localhost/api/ws/')
 
     var datasets = [];
     for(let i = 0; i < computersPerf.length; i++){
@@ -250,28 +272,4 @@ function buildMinimaDonut() {
         }
       }
     });
-}
-
-function webSockReceive() {
-
-    var socket = new WebSocket("ws://localhost:8080");
-
-    socket.onopen = function() {
-        console.log("Connection Opened");
-
-        var json = JSON.stringify({message: 'Hello'});
-        socket.send(json);
-    }
-
-    socket.onmessage = function(event) {
-        console.log(event.data);
-    }
-
-    socket.onerror = function(event) {
-        console.log(event);
-    }
-
-    socket.onclose = function(code, reason) {
-        console.log(code, reason);
-    }
 }
