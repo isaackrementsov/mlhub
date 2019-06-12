@@ -5,6 +5,7 @@ import Computer from '../entity/Computer';
 import TrainingData from '../entity/TrainingData';
 import Activation from '../entity/Activation';
 import Config from '../entity/Config';
+import RelativeMinimum from '../entity/RelativeMinimum';
 
 export default class ApiController {
 
@@ -12,30 +13,30 @@ export default class ApiController {
     trainingDataRepo : Repository<TrainingData>;
     activationRepo : Repository<Activation>;
     configRepo : Repository<Config>;
+    minimaRepo : Repository<RelativeMinimum>;
     passkey : string;
 
-    //Except for the last two, all methods in ApiController are middleware checked, so authKey must be valid
-
-    getInputs = async (req : Request, res : Response) => {
-        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['inputActivations'], where: {'def': ''}});
-
-        let inputs : number[][] = data.map(d => {
-            return d.inputActivations.map(i => {
-                return i.val;
-            });
+    private mapData(td : TrainingData[], input : boolean) : number[][] {
+        return td.map((d : TrainingData) => {
+            let arr : Activation[] = input ? d.inputActivations : d.outputActivations;
+            return arr.filter((i : Activation) => input ? i.def == '' : i.def != '')
+                .map((i : Activation) => i.val);
         });
+    }
+
+    //Except for the last two, all methods in ApiController are middleware checked, so authKey must be valid
+    getInputs = async (req : Request, res : Response) => {
+        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['inputActivations']});
+
+        let inputs : number[][] = this.mapData(data, true);
 
         res.send(inputs);
     }
 
     getOutputs = async (req : Request, res : Response) => {
-        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['outputActivations'], where: {'def': Not('')}});
+        let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['outputActivations']});
 
-        let outputs = data.map(d => {
-            return d.outputActivations.map(o => {
-                return o.val;
-            });
-        });
+        let outputs : number[][] = this.mapData(data, false)
 
         res.send(outputs);
     }
@@ -43,12 +44,16 @@ export default class ApiController {
     getMisc = async (req : Request, res : Response) => {
         let computer : Computer = await this.computerRepo.findOne({select: ['learningRate'], where: {'authKey': req.query.authKey}});
         let config : Config = await this.configRepo.findOne();
+        let minimum = await this.minimaRepo.createQueryBuilder('rel')
+            .select('MIN(rel.value)', 'min').getRawOne();
+
         res.send({
             learningRate: computer.learningRate,
             thresHold: config.thresHold,
             decayRate: config.decayRate,
             maxSteps: config.maxSteps,
-            layers: config.layers
+            layers: config.layers,
+            minimum: minimum.min
         });
     }
 
@@ -78,6 +83,7 @@ export default class ApiController {
         this.trainingDataRepo = getRepository(TrainingData);
         this.activationRepo = getRepository(Activation);
         this.configRepo = getRepository(Config);
+        this.minimaRepo = getRepository(RelativeMinimum);
 
         this.passkey = userPasskey;
     }
