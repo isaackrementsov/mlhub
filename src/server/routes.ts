@@ -12,7 +12,7 @@ let routes = (app) => {
     let computerController : ComputerController = new ComputerController();
     let userController : UserController = new UserController();
     let apiController : ApiController = new ApiController(userController.passkey);
-
+    
     app.get('/', userController.getLogin);
     app.get('/hub/logout', userController.getLogout);
     app.get('/hub', computerController.getData);

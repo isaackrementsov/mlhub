@@ -54,7 +54,6 @@ function perf() {
 }
 
 function donut() {
-    console.log('donut')
     ctx = document.getElementById('minimaDonut').getContext('2d');
     buildMinimaDonut();
 }
@@ -185,16 +184,14 @@ function buildPerfChart() {
 
 function buildMinimaDonut() {
 
-    let exComps = [{name: 'Dell G3', minima: 12}, {name: 'Macbook Pro', minima: 15}];
-
-
     let data = [];
     let donutColors = [];
     let labels = [];
     let sum = 0;
 
-    for(let i = 0; i < exComps.length; i++){
-        let obj = exComps[i];
+
+    for(let i = 0; i < computersMinima.length; i++) {
+        let obj = computersMinima[i];
         donutColors.push(colors[chooseColor(i)]);
         data.push(obj.minima);
         labels.push(obj.name);

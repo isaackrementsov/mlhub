@@ -7,6 +7,8 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as redis from 'redis';
 import * as session from 'express-session';
+import * as moment from 'moment';
+import * as ws from 'ws';
 
 import ejs from 'ejs';
 
@@ -16,6 +18,9 @@ const RedisStore = require('connect-redis')(session);
 
 const client = redis.createClient();
 const app = express();
+var http = require('http');
+var server = http.createServer(app);
+
 
 const SESSION_SECRET = randomGen();
 
@@ -35,5 +40,6 @@ app.use(session({
     })
 }));
 app.use(express.static(path.join(__dirname, "../public")));
+
 
 export default app;
