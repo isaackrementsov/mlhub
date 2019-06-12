@@ -129,6 +129,9 @@ function buildChart(){
 }
 
 function buildPerfChart() {
+
+    webSockReceive();
+
     var datasets = [];
     for(let i = 0; i < computersPerf.length; i++){
         let computerPerf = computersPerf[i];
@@ -179,7 +182,7 @@ function buildPerfChart() {
               }]
             }
         }
-    });    
+    });
 }
 
 function buildMinimaDonut() {
@@ -211,7 +214,7 @@ function buildMinimaDonut() {
             if (type == 'doughnut') {
                 var oldFill = ctx.fillStyle;
                 var fontSize = ((height - chart.chartArea.top) / 100).toFixed(2);
-      
+
                 ctx.restore();
                 ctx.font = fontSize + "em sans-serif";
                 ctx.textBaseline = "middle"
@@ -219,7 +222,7 @@ function buildMinimaDonut() {
                 var text = sum;
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
                 textY = (height + chart.chartArea.top) / 2;
-            
+
                 ctx.fillStyle = chart.config.data.datasets[0].backgroundColor[0];
                 ctx.fillText(text, textX, textY);
                 ctx.fillStyle = oldFill;
@@ -249,3 +252,26 @@ function buildMinimaDonut() {
     });
 }
 
+function webSockReceive() {
+
+    var socket = new WebSocket("ws://localhost:8080");
+
+    socket.onopen = function() {
+        console.log("Connection Opened");
+
+        var json = JSON.stringify({message: 'Hello'});
+        socket.send(json);
+    }
+
+    socket.onmessage = function(event) {
+        console.log(event.data);
+    }
+
+    socket.onerror = function(event) {
+        console.log(event);
+    }
+
+    socket.onclose = function(code, reason) {
+        console.log(code, reason);
+    }
+}
