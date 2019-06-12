@@ -1,17 +1,20 @@
 import { Request, Response } from 'express';
 import { Repository, Not, getRepository } from 'typeorm';
+import * as WebSocket from 'ws';
 
 import Computer from '../entity/Computer';
 import TrainingData from '../entity/TrainingData';
 import Activation from '../entity/Activation';
 import Config from '../entity/Config';
 import RelativeMinimum from '../entity/RelativeMinimum';
+import Weight from '../entity/Weight';
 
 export default class ApiController {
 
     computerRepo : Repository<Computer>;
     trainingDataRepo : Repository<TrainingData>;
     activationRepo : Repository<Activation>;
+    weightRepo : Repository<Weight>;
     configRepo : Repository<Config>;
     minimaRepo : Repository<RelativeMinimum>;
     passkey : string;
@@ -25,6 +28,38 @@ export default class ApiController {
     }
 
     //Except for the last two, all methods in ApiController are middleware checked, so authKey must be valid
+    wsOpen = (ws : WebSocket, req : Request) => {
+        ws.on('message', (ws : WebSocket, req : Request) => {
+            
+        });
+    }
+
+    wsRelativeMinimum = (ws : WebSocket, req : Request) => {
+        ws.on('message', async data => {
+            let obj = JSON.parse(data);
+
+            obj.weights.map(l => l.map(j => j.map(k => {
+                this.weightRepo.save(new Weight(j, l, obj.weights[l][j][k].val, k));
+            })));
+
+            obj.biases.map(l => l.map(j => {
+                this.weightRepo.save(new Weight(j, l, obj.biases[l][j].val));
+            }));
+
+            let refComp : Computer = await this.computerRepo.findOne({'authKey': data.authKey});
+            let min : RelativeMinimum = new RelativeMinimum(
+                refComp,
+                data.session,
+                new Date(),
+                data.cost
+            );
+
+            this.minimaRepo.save(min);
+
+            ws.send(JSON.stringify(min));
+        });
+    }
+
     getInputs = async (req : Request, res : Response) => {
         let data : TrainingData[] = await this.trainingDataRepo.find({relations: ['inputActivations']});
 
@@ -84,6 +119,7 @@ export default class ApiController {
         this.activationRepo = getRepository(Activation);
         this.configRepo = getRepository(Config);
         this.minimaRepo = getRepository(RelativeMinimum);
+        this.weightRepo = getRepository(Weight);
 
         this.passkey = userPasskey;
     }

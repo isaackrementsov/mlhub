@@ -14,10 +14,13 @@ export default class Weight {
     to : number;
     @Column()
     layer : number;
+    @Column({type: 'float'})
+    val : number;
 
-    constructor(startingIndex : number, layer : number, endingIndex ? : number){
+    constructor(startingIndex : number, layer : number, value : number, endingIndex ? : number){
         this.idx = startingIndex;
         this.layer = layer;
+        this.val = value;
         this.to = endingIndex ? endingIndex : -1;
     }
 

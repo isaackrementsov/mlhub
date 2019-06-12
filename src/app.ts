@@ -7,22 +7,17 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as redis from 'redis';
 import * as session from 'express-session';
-import * as moment from 'moment';
-import * as ws from 'ws';
 
 import ejs from 'ejs';
 
 import randomGen from './util/randomGen';
 
-const RedisStore = require('connect-redis')(session);
-
 const client = redis.createClient();
 const app = express();
-var http = require('http');
-var server = http.createServer(app);
-
-
 const SESSION_SECRET = randomGen();
+
+const RedisStore = require('connect-redis')(session);
+const ExpressWs = require('express-ws')(app);
 
 app.set('port', process.env.PORT || 80);
 app.set('views', path.join(__dirname, '../views'));

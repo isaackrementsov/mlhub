@@ -12,17 +12,17 @@ export default class RelativeMinimum {
 
 	@Column({type: 'float'})
 	value: number;
-	@Column({type: 'float'})
-	slope: number;
+	@Column()
+	session: number;
 	@Column()
 	date: Date;
 
 	@ManyToOne(type => Computer)
 	computer : Computer;
 
-	constructor(computerThatFound : Computer, slopeAtPoint : number, dateCurrent : Date, mseValue : number) {
+	constructor(computerThatFound : Computer, sessionFound : number, dateCurrent : Date, mseValue : number) {
 		this.computer = computerThatFound;
-		this.slope = slopeAtPoint;
+		this.session = sessionFound;
 		this.date = dateCurrent;
 		this.value = mseValue;
 	}
