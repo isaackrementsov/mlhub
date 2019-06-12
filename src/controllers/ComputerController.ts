@@ -4,6 +4,7 @@ Don't select all minima
 import { Response, Request } from 'express';
 import { Repository, getRepository } from 'typeorm';
 import * as moment from 'moment';
+import * as ws from 'websocket';
 
 
 import RelativeMinimum from '../entity/RelativeMinimum';
@@ -17,7 +18,7 @@ export default class ComputerController {
     dateRepo : Repository<DataPoint>;
 
     getData = async (req : Request, res : Response) => {
-        let computers : Computer[] = await this.repo.find({relations: ['data']});
+        let computers : Computer[] = await this.repo.find({relations: ['relativeMinima']});
         let relativeMinima : RelativeMinimum[] = await this.minRepo.find();
         res.render("hub", {session: req.session, computers: computers, minima: relativeMinima.sort((a, b) => a.value - b.value)});
     }
@@ -38,18 +39,16 @@ export default class ComputerController {
     }
 
     getPerformance = async (req : Request, res : Response) => {
-        let computers : Computer[] = await this.repo.find({'relations' : ['data']});
-        let relativeMinima : RelativeMinimum[] = await this.minRepo.find();
+        let computers : Computer[] = await this.repo.find({'relations' : ['relativeMinima']});
         let datePoints : DataPoint[] = await this.dateRepo.find();
         datePoints.sort((a, b) => {
             return a.time.valueOf() - b.time.valueOf();
         })
         console.log(datePoints[0].time.valueOf());
         res.render("performance", {
-            session: req.session, 
-            computers: computers, 
-            minima: relativeMinima.sort((a, b) => a.value - b.value), 
-            date: moment(datePoints[0].time.valueOf()).fromNow()
+            session: req.session,
+            computers: computers.map(c => {return {name: c.name, minima: c.relativeMinima.length}}),
+            date: datePoints[0].time.valueOf()
         });
     }
 

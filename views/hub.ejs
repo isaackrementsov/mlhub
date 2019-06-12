@@ -5,18 +5,16 @@
     }
 </script>
 <% computers.map(c => { %>
-    <% if(c.connected){ %>
-        <% c.data.sort((a, b) => a.time.valueOf() - b.time.valueOf()) %>
-        <% var sess = c.data[0].session %>
-        <% c.data.map(d => { %>
-            <% if(d.session == sess){ %>
-                <div value="<%= c.name %>|<%= Math.round(c.learningRate*100)/100 %>" class="data-point" style="display: none">
-                    <%= Math.round(100*(d.time.valueOf() - new Date().valueOf())/60000)/100 %>|
-                    <%= d.value %>
-                </div>
-            <% } %>
-        <% }); %>
-    <% } %>
+    <% c.relativeMinima.sort((a, b) => a.date.valueOf() - b.date.valueOf()) %>
+        <div class="data"  id="<%= c.name %>" value="<%= c.name %>|<%= Math.round(c.learningRate*100)/100 %>" style="display: none">
+            <% c.relativeMinima.map(d => { %>
+                    <div class="data-point">
+                        <%= Math.round(100*(d.date.valueOf() - new Date().valueOf())/60000)/100 %>|
+                        <%= d.value %>|
+                        <%= d.date %>
+                    </div>
+            <% }); %>
+        </div>
 <% }); %>
 <div class="content" style="width: 85%; display: inline-block; left: 15%">
     <div class="header">
@@ -60,23 +58,22 @@
     </div>
 </div>
 <script type="text/javascript">
-    var dataPoints = document.getElementsByClassName('data-point');
+    var data = document.getElementsByClassName('data');
     var computers = [];
-    for(let i = 0; i < dataPoints.length; i++){
-        var dp = dataPoints[i];
-        var cInfo = dp.getAttribute('value').split('|');
-        var parts = dp.innerHTML.split('|');
-        var data = {x: parseFloat(parts[0]), y: parseFloat(parts[1])};
-        var filtered = computers.filter(c => c.name == cInfo[0]);
-        if(filtered.length == 0){
-            computers.push({name: cInfo[0], lr: parseFloat(cInfo[1]), data: [data]});
-        }else{
-            filtered[0].data.push(data);
+    for(let i = 0; i < data.length; i++){
+        let [name, lr] = data[i].getAttribute('value').split('|');
+        let points = document.querySelectorAll(`#${name} .data-point`);
+        let arr = [];
+        for(let j = 0; j < points.length; j++){
+            let [x, y, old] = points[i].innerHTML.split('|');
+            arr.push({x: parseFloat(x), y: parseFloat(y), old: old});
         }
+        computers.push({name: name, lr: parseFloat(lr), data: arr});
     }
+
     for(let i = 0; i < computers.length; i++){
         computers[i].data.sort((a, b) => a.x - b.x);
     }
-    
+
 </script>
 <% include partials/footer %>

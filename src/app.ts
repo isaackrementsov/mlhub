@@ -12,14 +12,16 @@ import ejs from 'ejs';
 
 import randomGen from './util/randomGen';
 
-const RedisStore = require('connect-redis')(session);
-
 const client = redis.createClient();
 const app = express();
-
 const SESSION_SECRET = randomGen();
 
+
 app.set('port', process.env.PORT || 8080);
+
+const RedisStore = require('connect-redis')(session);
+const ExpressWs = require('express-ws')(app);
+
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -35,5 +37,6 @@ app.use(session({
     })
 }));
 app.use(express.static(path.join(__dirname, "../public")));
+
 
 export default app;

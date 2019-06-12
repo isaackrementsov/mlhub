@@ -25,5 +25,8 @@ let routes = (app) => {
     app.post('/hub/computers/update', computerController.patch);
     app.post('/api/login', apiController.postLogin);
     app.post('/api/computers/register', apiController.postRegisterComputer);
+
+    app.ws('/api/ws/open', apiController.wsOpen);
+    app.ws('/api/ws/relativeMinimum', apiController.wsRelativeMinimum);
 }
 export default routes;

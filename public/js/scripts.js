@@ -54,7 +54,6 @@ function perf() {
 }
 
 function donut() {
-    console.log('donut')
     ctx = document.getElementById('minimaDonut').getContext('2d');
     buildMinimaDonut();
 }
@@ -64,13 +63,13 @@ function updateSlider(s, i){
     let val = s.value/100;
     labels[i].innerHTML = Math.round(val*1000)/100;
     sliders[i].style.backgroundImage = `-webkit-gradient(linear, left top, right top,
-            color-stop(${val}, ${colors[i]}),
+            color-stop(${val}, ${colors[chooseColor(i)]}),
             color-stop(${val + 0.01}, #C5C5C5)
     )`;
 }
 function chooseColor(i){
     if(i < 0 || i >= colors.length){
-        return i - colors.length;
+        return i % (colors.length - 1);
     }else{
         return i;
     }
@@ -79,7 +78,7 @@ function buildChart(){
     var datasets = [];
     for(let i = 0; i < computers.length; i++){
         let computer = computers[i];
-        let line = colors[i];
+        let line = colors[chooseColor(i)];
         let fill = `rgba(${line.split('(')[1].split(')')[0]},0.6)`;
         let gradient = ctx.createLinearGradient(800,0,0,0);
         gradient.addColorStop(0, fill);
@@ -102,6 +101,28 @@ function buildChart(){
             data: computer.data
         });
     }
+
+    let ws = new WebSocket('ws://localhost/api/ws/relativeMinimum');
+    ws.onopen = () => { }
+
+    ws.onmessage = data => {
+        let obj = JSON.parse(data.data);
+        for(let i = 0; i < stackedLine.data.datasets.length; i++){
+            let set = stackedLine.data.datasets[i];
+            if(set.label == obj.computer.name){
+                for(let k = 0; k < set.data.length; k++){
+                    stackedLine.data.datasets[i].data[k].x = Math.round(1000*(new Date(set.data[k].old).valueOf() - new Date().valueOf())/1000)/1000;
+                }
+                stackedLine.data.datasets[i].data.push({
+                    x: Math.round(1000*(new Date(obj.date).valueOf() - new Date().valueOf())/1000)/1000,
+                    y: obj.value,
+                    old: obj.value
+                });
+            }
+        }
+        stackedLine.update();
+    }
+
     var stackedLine = new Chart(ctx, {
         type: 'scatter',
         data: {
@@ -114,14 +135,14 @@ function buildChart(){
                 display: true,
                 scaleLabel: {
                   display: true,
-                  labelString: 'Minutes Ago'
+                  labelString: 'Time Ago'
                 }
               }],
               yAxes: [{
                 display: true,
                 scaleLabel: {
                   display: true,
-                  labelString: '-∇C'
+                  labelString: 'Cost'
                 }
               }]
             }
@@ -130,6 +151,9 @@ function buildChart(){
 }
 
 function buildPerfChart() {
+
+    //let ws = new WebSocket('ws://localhost/api/ws/')
+
     var datasets = [];
     for(let i = 0; i < computersPerf.length; i++){
         let computerPerf = computersPerf[i];
@@ -180,21 +204,19 @@ function buildPerfChart() {
               }]
             }
         }
-    });    
+    });
 }
 
 function buildMinimaDonut() {
-
-    let exComps = [{name: 'Dell G3', minima: 12}, {name: 'Macbook Pro', minima: 15}];
-
 
     let data = [];
     let donutColors = [];
     let labels = [];
     let sum = 0;
 
-    for(let i = 0; i < exComps.length; i++){
-        let obj = exComps[i];
+
+    for(let i = 0; i < computersMinima.length; i++) {
+        let obj = computersMinima[i];
         donutColors.push(colors[chooseColor(i)]);
         data.push(obj.minima);
         labels.push(obj.name);
@@ -214,7 +236,7 @@ function buildMinimaDonut() {
             if (type == 'doughnut') {
                 var oldFill = ctx.fillStyle;
                 var fontSize = ((height - chart.chartArea.top) / 100).toFixed(2);
-      
+
                 ctx.restore();
                 ctx.font = fontSize + "em sans-serif";
                 ctx.textBaseline = "middle"
@@ -222,7 +244,7 @@ function buildMinimaDonut() {
                 var text = sum;
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
                 textY = (height + chart.chartArea.top) / 2;
-            
+
                 ctx.fillStyle = chart.config.data.datasets[0].backgroundColor[0];
                 ctx.fillText(text, textX, textY);
                 ctx.fillStyle = oldFill;
@@ -251,4 +273,3 @@ function buildMinimaDonut() {
       }
     });
 }
-

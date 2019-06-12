@@ -1,5 +1,10 @@
 <% include partials/header %>
 
+<% computers.map(c => { %>
+    <div class="minima-data" id="<%= c.name %>"><%= c.minima %></div>
+<%})%>
+
+
 <div class="content" style="width: 85%; display: inline-block; left: 15%">
     <div class="header">
         <h1 class="dashboard-header">Performance</h1>
@@ -11,27 +16,44 @@
             <canvas id="graph" height="215%"></canvas>
         </div>
         </div>
-        <div class="panel" id="doughnut-minima">
-            <h3>Minima Found</h3>
-            <canvas id="minimaDonut"></canvas> 
+        <a href="scripts.js:webSockReceive()">Test WebSocket HTML5 API </a>
+        <div class="panels-row">
+            <div class="panel" id="doughnut-minima">
+
+                <h3>Minima Found</h3>
+                <canvas id="minimaDonut"></canvas>
+            </div>
+            <div class="panel" id="stop-learn">
+                <button class="button" onclick="stop()">STOP LEARNING</button>
+            </div>
         </div>
-        <div class="panel" id="stop-learn">
-            <button class="button" onclick="stop()">STOP LEARNING</button>
-        </div>
+
         <div class="panel" id="time-spent">
             <p id="time-txt"> Time Spent Learning </p>
-            <p id="time-num"><%= date %></p>
+            <time id="time-num" class="timeago" datetime="<%= new Date(date).toISOString() %>">Jun 16, 2019</time>
         </div>
     </div>
 </div>
-<script> console.log(moment(oldDate).fromNow()) </script>
 <script type="text/javascript">
+
+    jQuery.timeago.settings.allowFuture = true;
+
+    jQuery(document).ready(function() {
+        $("time#time-num").timeago();
+    });
 
     var computersPerf = [];
 
     for(let i = 0; i < computersPerf.length; i++){
         computersPerf[i].data.sort((a, b) => a.x - b.x);
     }
-    
+
+    var minimaData = document.getElementsByClassName('minima-data');
+    var computersMinima = [];
+
+    for(let i = 0; i < minimaData.length; i++){
+        computersMinima.push({name: minimaData[i].id, minima: parseInt(minimaData[i].innerHTML)});
+    }
+
 </script>
 <% include partials/footer %>
